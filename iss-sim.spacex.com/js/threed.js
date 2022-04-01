@@ -108,7 +108,8 @@ function initWebgl() {
       hitDistance
     )),
     deviceSettings.isMobile && (isAliasing = !1),
-    (renderer = new THREE.WebGLRenderer({ alpha: !1, antialias: isAliasing })),
+    (renderer = new THREE.WebGLRenderer({ alpha: !1, antialias: true })),
+    renderer.setPixelRatio(window.devicePixelRatio),
     renderer.setSize(width, height),
     renderer.setClearColor(0, 1),
     document.getElementById("interactive").appendChild(renderer.domElement),
@@ -119,6 +120,7 @@ function initWebgl() {
     (navballCamera.rotation.z = 180 * toRAD),
     navballScene.add(navballCamera),
     (navballRenderer = new THREE.WebGLRenderer({ alpha: !0, antialias: !0 })),
+    navballRenderer.setPixelRatio(window.devicePixelRatio),
     navballRenderer.setSize(navballWidth, navballHeight, !1),
     navballRenderer.setClearColor(0, 0);
   var t = document.getElementById("navball");
