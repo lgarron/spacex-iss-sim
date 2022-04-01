@@ -1,3 +1,71 @@
+function playSound(cl) {
+  const elems = document.querySelectorAll(`audio.${cl}`);
+  const playable = [];
+  for (const elem of elems) {
+    if (elem.paused) {
+      playable.push(elem);
+    }
+  }
+  const choice = playable[Math.floor(Math.random() * playable.length)];
+  if (!choice) {
+    console.warn("Ran out of players!", cl);
+    return;
+  }
+  choice.timestamp = 0;
+  choice.play();
+}
+
+loopify("./audio/sfx_holosteady_loop1.wav", (err, loop) => {
+  loop.play();
+});
+
+class Klaxon {
+  constructor() {
+    loopify("./audio/sfx_klaxon2_loop.wav", (err, loop) => {
+      this.caution = loop;
+    });
+    loopify("./audio/sfx_klaxon3_loop.wav", (err, loop) => {
+      this.warning = loop;
+    });
+  }
+
+  levelMap = new Map(); // elem to level
+
+  currentMaxLevel = "normal";
+  setLevel(e, level) {
+    e.classList.add(level);
+
+    this.levelMap.set(e, level);
+    let maxLevel = "normal";
+    for (const value of this.levelMap.values()) {
+      if (value === "caution") {
+        maxLevel = "caution";
+      }
+      if (value === "warning") {
+        maxLevel = "warning";
+        break;
+      }
+    }
+    if (maxLevel === "caution" && this.currentMaxLevel !== "caution") {
+      console.log(maxLevel);
+      this.caution.play();
+      this.warning.stop();
+    }
+    if (maxLevel === "warning" && this.currentMaxLevel !== "warning") {
+      console.log(maxLevel);
+      this.caution.stop();
+      this.warning.play();
+    }
+    if (maxLevel === "normal") {
+      console.log(maxLevel);
+      this.caution.stop();
+      this.warning.stop();
+    }
+    this.currentMaxLevel = maxLevel;
+  }
+}
+const klaxon = new Klaxon();
+
 gsap.defaults({ overwrite: "auto" }), gsap.config({ nullTargetWarn: !1 });
 var deviceSettings = {
   isWebGL: !1,
@@ -476,34 +544,52 @@ function initButtons() {
             rotate_down2: 40,
           };
         e === o.rotate_left || e === o.rotate_left2
-          ? (yawLeft(), $("#yaw-left-button").classList.remove("active"))
+          ? (yawLeft(),
+            playSound("thruster"),
+            $("#yaw-left-button").classList.remove("active"))
           : e === o.rotate_right || e === o.rotate_right2
-          ? (yawRight(), $("#yaw-right-button").classList.remove("active"))
+          ? (yawRight(),
+            playSound("thruster"),
+            $("#yaw-right-button").classList.remove("active"))
           : e === o.rotate_up || e === o.rotate_up2
-          ? (pitchUp(), $("#pitch-up-button").classList.remove("active"))
+          ? (pitchUp(),
+            playSound("thruster"),
+            $("#pitch-up-button").classList.remove("active"))
           : e === o.rotate_down || e === o.rotate_down2
-          ? (pitchDown(), $("#pitch-down-button").classList.remove("active"))
+          ? (pitchDown(),
+            playSound("thruster"),
+            $("#pitch-down-button").classList.remove("active"))
           : e === o.roll_left || e === o.roll_left2
-          ? (rollLeft(), $("#roll-left-button").classList.remove("active"))
+          ? (rollLeft(),
+            playSound("thruster"),
+            $("#roll-left-button").classList.remove("active"))
           : e === o.roll_right || e === o.roll_right2
-          ? (rollRight(), $("#roll-right-button").classList.remove("active"))
+          ? (rollRight(),
+            playSound("thruster"),
+            $("#roll-right-button").classList.remove("active"))
           : e === o.move_up
           ? (translateUp(),
+            playSound("thruster"),
             $("#translate-up-button").classList.remove("active"))
           : e === o.move_down
           ? (translateDown(),
+            playSound("thruster"),
             $("#translate-down-button").classList.remove("active"))
           : e === o.move_left
           ? (translateLeft(),
+            playSound("thruster"),
             $("#translate-left-button").classList.remove("active"))
           : e === o.move_right
           ? (translateRight(),
+            playSound("thruster"),
             $("#translate-right-button").classList.remove("active"))
           : e === o.forward
           ? (translateForward(),
+            playSound("thruster-high"),
             $("#translate-forward-button").classList.remove("active"))
           : e === o.backward
           ? (translateBackward(),
+            playSound("thruster-low"),
             $("#translate-backward-button").classList.remove("active"))
           : void 0;
       }
@@ -546,6 +632,7 @@ var introAnimationIn,
   interfaceAnimationOut,
   isIntroStarted = !1;
 function showIntro() {
+  setTimeout(() => playSound("intro"), 3700);
   (introAnimationIn = new TimelineMax({ paused: !0 })),
     introAnimationIn.fromTo(
       "#intro",
@@ -598,6 +685,7 @@ function showIntroHelpers() {
     );
 }
 function hideIntro() {
+  playSound("begin");
   isIntroStarted ||
     ((isIntroStarted = !0),
     (introAnimationOut = new TimelineMax({ paused: !0 })),
@@ -2503,14 +2591,15 @@ function updateWormRateColor(t, e) {
   $("#worm-" + e).classList.remove("caution"),
     $("#worm-" + e).classList.remove("warning"),
     $("#" + e + " .rate").classList.remove("caution"),
-    $("#" + e + " .rate").classList.remove("warning"),
-    o < wormRateCaution ||
-      (o >= wormRateCaution && o < wormRateWarning
-        ? ($("#worm-" + e).classList.add("caution"),
-          $("#" + e + " .rate").classList.add("caution"))
-        : o >= wormRateWarning &&
-          ($("#worm-" + e).classList.add("warning"),
-          $("#" + e + " .rate").classList.add("warning")));
+    $("#" + e + " .rate").classList.remove("warning");
+  let level = "normal";
+  if (o >= wormRateWarning) {
+    level = "warning";
+  } else if (o >= wormRateCaution) {
+    level = "caution";
+  }
+  klaxon.setLevel($("#worm-" + e), level);
+  $("#" + e + " .rate").classList.add(level);
 }
 var rateCategory = "";
 function updateRateColor(t) {
@@ -2518,8 +2607,7 @@ function updateRateColor(t) {
     var e = $("#rate .rate");
     e.classList.remove("caution"),
       e.classList.remove("warning"),
-      "caution" == t && e.classList.add("caution"),
-      "warning" === t && e.classList.add("warning");
+      klaxon.setLevel(e, t);
   }
 }
 var instructionsStep = 1,
