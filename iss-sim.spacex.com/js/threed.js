@@ -20,24 +20,31 @@ loopify("./audio/sfx_holosteady_loop1.wav", (err, loop) => {
 });
 
 class Klaxon {
-  constructor() {
-    loopify("./audio/sfx_klaxon2_loop.wav", (err, loop) => {
-      this.caution = loop;
-    });
-    loopify("./audio/sfx_klaxon3_loop.wav", (err, loop) => {
-      this.warning = loop;
-    });
+  constructor(subcaution, caution, warning) {
+    subcaution &&
+      loopify(subcaution, (err, loop) => {
+        this.subcaution = loop;
+      });
+    caution &&
+      loopify(caution, (err, loop) => {
+        this.caution = loop;
+      });
+    warning &&
+      loopify(warning, (err, loop) => {
+        this.warning = loop;
+      });
   }
 
   levelMap = new Map(); // elem to level
 
   currentMaxLevel = "normal";
   setLevel(e, level) {
-    e.classList.add(level);
-
     this.levelMap.set(e, level);
     let maxLevel = "normal";
     for (const value of this.levelMap.values()) {
+      if (value === "subcaution" && maxLevel !== "caution") {
+        maxLevel = "subcaution";
+      }
       if (value === "caution") {
         maxLevel = "caution";
       }
@@ -46,25 +53,43 @@ class Klaxon {
         break;
       }
     }
+    if (maxLevel === "subcaution" && this.currentMaxLevel !== "subcaution") {
+      // console.log(maxLevel);
+      this.subcaution?.play();
+      this.caution?.stop();
+      this.warning?.stop();
+    }
     if (maxLevel === "caution" && this.currentMaxLevel !== "caution") {
-      console.log(maxLevel);
-      this.caution.play();
-      this.warning.stop();
+      // console.log(maxLevel);
+      this.subcaution?.play();
+      this.caution?.play();
+      this.warning?.stop();
     }
     if (maxLevel === "warning" && this.currentMaxLevel !== "warning") {
-      console.log(maxLevel);
-      this.caution.stop();
-      this.warning.play();
+      // console.log(maxLevel);
+      this.subcaution?.stop();
+      this.caution?.stop();
+      this.warning?.play();
     }
-    if (maxLevel === "normal") {
-      console.log(maxLevel);
-      this.caution.stop();
-      this.warning.stop();
+    if (maxLevel === "normal" && this.currentMaxLevel !== "normal") {
+      // console.log(maxLevel);
+      this.subcaution?.stop();
+      this.caution?.stop();
+      this.warning?.stop();
     }
     this.currentMaxLevel = maxLevel;
   }
 }
-const klaxon = new Klaxon();
+const klaxon = new Klaxon(
+  null, //"./audio/sfx_buzzer_misc_t_loop.wav",
+  "./audio/sfx_klaxon2_loop.wav",
+  "./audio/sfx_klaxon3_loop.wav"
+);
+const speedklaxon = new Klaxon(
+  null, //"./audio/sfx_buzzer_misc_t_loop.wav",
+  null,
+  "./audio/sfx_passby_bigship_loop2.wav"
+);
 
 gsap.defaults({ overwrite: "auto" }), gsap.config({ nullTargetWarn: !1 });
 var deviceSettings = {
@@ -178,7 +203,7 @@ function initWebgl() {
     deviceSettings.isMobile && (isAliasing = !1),
     (renderer = new THREE.WebGLRenderer({ alpha: !1, antialias: true })),
     renderer.setPixelRatio(window.devicePixelRatio),
-    renderer.setSize(width, height),
+    renderer.setSize(width, height, true),
     renderer.setClearColor(0, 1),
     document.getElementById("interactive").appendChild(renderer.domElement),
     (navballScene = new THREE.Scene()),
@@ -189,7 +214,7 @@ function initWebgl() {
     navballScene.add(navballCamera),
     (navballRenderer = new THREE.WebGLRenderer({ alpha: !0, antialias: !0 })),
     navballRenderer.setPixelRatio(window.devicePixelRatio),
-    navballRenderer.setSize(navballWidth, navballHeight, !1),
+    navballRenderer.setSize(navballWidth, navballHeight, true),
     navballRenderer.setClearColor(0, 0);
   var t = document.getElementById("navball");
   t.appendChild(navballRenderer.domElement),
@@ -448,6 +473,8 @@ function initButtons() {
             rotate_left2: 37,
             rotate_down2: 40,
             toggle_earth: 48,
+            toggle_translation: 50,
+            toggle_rotation: 51,
           };
         switch (e) {
           case o.rotate_left:
@@ -491,6 +518,12 @@ function initButtons() {
             break;
           case o.backward:
             $("#translate-backward-button").classList.add("active");
+            break;
+          case o.toggle_translation:
+            toggleTranslation();
+            break;
+          case o.toggle_rotation:
+            toggleRotation();
             break;
           case o.toggle_earth:
         }
@@ -968,7 +1001,8 @@ function hideInterface(t) {
       0
     ),
     "success" === t &&
-      (interfaceAnimationOut.fromTo(
+      (playSound("door"),
+      interfaceAnimationOut.fromTo(
         "#success",
         1,
         { autoAlpha: 0 },
@@ -2599,6 +2633,7 @@ function updateWormRateColor(t, e) {
     level = "caution";
   }
   klaxon.setLevel($("#worm-" + e), level);
+  $("#worm-" + e).classList.add(level);
   $("#" + e + " .rate").classList.add(level);
 }
 var rateCategory = "";
@@ -2607,7 +2642,8 @@ function updateRateColor(t) {
     var e = $("#rate .rate");
     e.classList.remove("caution"),
       e.classList.remove("warning"),
-      klaxon.setLevel(e, t);
+      e.classList.add(t);
+    speedklaxon.setLevel(e, t);
   }
 }
 var instructionsStep = 1,
