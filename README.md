@@ -1,4 +1,4 @@
-# SpaceX ISS Simulator (Lucas's mods)
+# SpaceX ISS Simulator (Lucas's mod)
 
 Run the [SpaceX ISS Docking Simulator](https://iss-sim.spacex.com/) locally.
 
