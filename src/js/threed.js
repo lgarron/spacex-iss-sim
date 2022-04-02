@@ -19,6 +19,7 @@ class TimerDisplay extends HTMLElement {
   }
 
   reset() {
+    this.active = false;
     this.setDisplayTime(0);
   }
 
@@ -32,10 +33,20 @@ class TimerDisplay extends HTMLElement {
   }
 
   stop() {
-    this.active = false;
-    this.update();
-    for (const timeResult of document.querySelector(".time-result")) {
-      timeResult.textContent = this.textContent;
+    if (this.active) {
+      this.active = false;
+      this.update();
+      for (const timeResult of document.querySelectorAll(".time-result")) {
+        console.log(timeResult);
+        timeResult.textContent = this.textContent;
+      }
+      this.animate(
+        [{ opacity: 0.1 }, { opacity: 1 }, { opacity: 0.1 }, { opacity: 1 }],
+        {
+          duration: 400,
+          easing: "ease-in",
+        }
+      );
     }
   }
 
@@ -1130,7 +1141,9 @@ function hideInterface(t) {
         3
       )),
     "fail" === t &&
-      (interfaceAnimationOut.fromTo(
+      (playSound("fail"),
+      $("timer-display").stop(),
+      interfaceAnimationOut.fromTo(
         "#fail",
         1.5,
         { autoAlpha: 0 },
@@ -1193,8 +1206,8 @@ function resetPosition() {
       ease: "expo.out",
     }),
     gsap.to(camera.position, ANIMATION_SCALE * 5, {
-      x: 12,
-      y: 30,
+      x: debugYZScale * 12,
+      y: debugYZScale * 30,
       z: 50,
       ease: "expo.out",
     }),
