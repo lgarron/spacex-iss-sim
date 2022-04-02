@@ -577,48 +577,31 @@ function initButtons() {
             rotate_down2: 40,
           };
         e === o.rotate_left || e === o.rotate_left2
-          ? (yawLeft(),
-            playSound("thruster"),
-            $("#yaw-left-button").classList.remove("active"))
+          ? (yawLeft(), $("#yaw-left-button").classList.remove("active"))
           : e === o.rotate_right || e === o.rotate_right2
-          ? (yawRight(),
-            playSound("thruster"),
-            $("#yaw-right-button").classList.remove("active"))
+          ? (yawRight(), $("#yaw-right-button").classList.remove("active"))
           : e === o.rotate_up || e === o.rotate_up2
-          ? (pitchUp(),
-            playSound("thruster"),
-            $("#pitch-up-button").classList.remove("active"))
+          ? (pitchUp(), $("#pitch-up-button").classList.remove("active"))
           : e === o.rotate_down || e === o.rotate_down2
-          ? (pitchDown(),
-            playSound("thruster"),
-            $("#pitch-down-button").classList.remove("active"))
+          ? (pitchDown(), $("#pitch-down-button").classList.remove("active"))
           : e === o.roll_left || e === o.roll_left2
-          ? (rollLeft(),
-            playSound("thruster"),
-            $("#roll-left-button").classList.remove("active"))
+          ? (rollLeft(), $("#roll-left-button").classList.remove("active"))
           : e === o.roll_right || e === o.roll_right2
-          ? (rollRight(),
-            playSound("thruster"),
-            $("#roll-right-button").classList.remove("active"))
+          ? (rollRight(), $("#roll-right-button").classList.remove("active"))
           : e === o.move_up
           ? (translateUp(),
-            playSound("thruster"),
             $("#translate-up-button").classList.remove("active"))
           : e === o.move_down
           ? (translateDown(),
-            playSound("thruster"),
             $("#translate-down-button").classList.remove("active"))
           : e === o.move_left
           ? (translateLeft(),
-            playSound("thruster"),
             $("#translate-left-button").classList.remove("active"))
           : e === o.move_right
           ? (translateRight(),
-            playSound("thruster"),
             $("#translate-right-button").classList.remove("active"))
           : e === o.forward
           ? (translateForward(),
-            playSound("thruster-high"),
             $("#translate-forward-button").classList.remove("active"))
           : e === o.backward
           ? (translateBackward(),
@@ -719,6 +702,7 @@ function showIntroHelpers() {
 }
 function hideIntro() {
   playSound("begin");
+  holosteadyLoop?.play();
   isIntroStarted ||
     ((isIntroStarted = !0),
     (introAnimationOut = new TimelineMax({ paused: !0 })),
@@ -2380,7 +2364,8 @@ function checkCollision() {
 }
 function rollLeft() {
   !0 === isGameOver ||
-    ((targetRotationZ -= rotationPulseSize * toRAD),
+    (playSound("thruster"),
+    (targetRotationZ -= rotationPulseSize * toRAD),
     (rateRotationZ -= rateSpeedSize),
     gsap.fromTo(
       "#tip-roll-left",
@@ -2392,7 +2377,8 @@ function rollLeft() {
 }
 function rollRight() {
   !0 === isGameOver ||
-    ((targetRotationZ += rotationPulseSize * toRAD),
+    (playSound("thruster"),
+    (targetRotationZ += rotationPulseSize * toRAD),
     (rateRotationZ += rateSpeedSize),
     gsap.fromTo(
       "#tip-roll-right",
@@ -2404,7 +2390,8 @@ function rollRight() {
 }
 function pitchDown() {
   !0 === isGameOver ||
-    ((targetRotationX += rotationPulseSize * toRAD),
+    (playSound("thruster"),
+    (targetRotationX += rotationPulseSize * toRAD),
     (rateRotationX += rateSpeedSize),
     gsap.fromTo(
       "#tip-pitch-down",
@@ -2416,7 +2403,8 @@ function pitchDown() {
 }
 function pitchUp() {
   !0 === isGameOver ||
-    ((targetRotationX -= rotationPulseSize * toRAD),
+    (playSound("thruster"),
+    (targetRotationX -= rotationPulseSize * toRAD),
     (rateRotationX -= rateSpeedSize),
     gsap.fromTo(
       "#tip-pitch-up",
@@ -2428,7 +2416,8 @@ function pitchUp() {
 }
 function yawLeft() {
   !0 === isGameOver ||
-    ((targetRotationY -= rotationPulseSize * toRAD),
+    (playSound("thruster"),
+    (targetRotationY -= rotationPulseSize * toRAD),
     (rateRotationY -= rateSpeedSize),
     gsap.fromTo(
       "#tip-yaw-left",
@@ -2440,7 +2429,8 @@ function yawLeft() {
 }
 function yawRight() {
   !0 === isGameOver ||
-    ((targetRotationY += rotationPulseSize * toRAD),
+    (playSound("thruster"),
+    (targetRotationY += rotationPulseSize * toRAD),
     (rateRotationY += rateSpeedSize),
     gsap.fromTo(
       "#tip-yaw-right",
@@ -2452,7 +2442,8 @@ function yawRight() {
 }
 function translateForward() {
   !0 === isGameOver ||
-    ((translationVector = new THREE.Vector3(0, 0, -translationPulseSize)),
+    (playSound("thruster-high"),
+    (translationVector = new THREE.Vector3(0, 0, -translationPulseSize)),
     translationVector.applyQuaternion(camera.quaternion),
     motionVector.add(translationVector),
     gsap.fromTo(
@@ -2464,7 +2455,8 @@ function translateForward() {
 }
 function translateBackward() {
   !0 === isGameOver ||
-    ((translationVector = new THREE.Vector3(0, 0, translationPulseSize)),
+    (playSound("thruster-low"),
+    (translationVector = new THREE.Vector3(0, 0, translationPulseSize)),
     translationVector.applyQuaternion(camera.quaternion),
     motionVector.add(translationVector),
     gsap.fromTo(
@@ -2482,7 +2474,8 @@ function translateBackward() {
 }
 function translateDown() {
   !0 === isGameOver ||
-    ((translationVector = new THREE.Vector3(0, -translationPulseSize, 0)),
+    (playSound("thruster"),
+    (translationVector = new THREE.Vector3(0, -translationPulseSize, 0)),
     translationVector.applyQuaternion(camera.quaternion),
     motionVector.add(translationVector),
     gsap.fromTo(
@@ -2506,7 +2499,8 @@ function translateDown() {
 }
 function translateUp() {
   !0 === isGameOver ||
-    ((translationVector = new THREE.Vector3(0, translationPulseSize, 0)),
+    (playSound("thruster"),
+    (translationVector = new THREE.Vector3(0, translationPulseSize, 0)),
     translationVector.applyQuaternion(camera.quaternion),
     motionVector.add(translationVector),
     gsap.fromTo(
@@ -2530,7 +2524,8 @@ function translateUp() {
 }
 function translateRight() {
   !0 === isGameOver ||
-    ((translationVector = new THREE.Vector3(translationPulseSize, 0, 0)),
+    (playSound("thruster"),
+    (translationVector = new THREE.Vector3(translationPulseSize, 0, 0)),
     translationVector.applyQuaternion(camera.quaternion),
     motionVector.add(translationVector),
     gsap.fromTo(
@@ -2554,7 +2549,8 @@ function translateRight() {
 }
 function translateLeft() {
   !0 === isGameOver ||
-    ((translationVector = new THREE.Vector3(-translationPulseSize, 0, 0)),
+    (playSound("thruster"),
+    (translationVector = new THREE.Vector3(-translationPulseSize, 0, 0)),
     translationVector.applyQuaternion(camera.quaternion),
     motionVector.add(translationVector),
     gsap.fromTo(
