@@ -44,7 +44,6 @@ class TimerDisplay extends HTMLElement {
         [{ opacity: 0.1 }, { opacity: 1 }, { opacity: 0.1 }, { opacity: 1 }],
         {
           duration: 400,
-          easing: "ease-in",
         }
       );
     }

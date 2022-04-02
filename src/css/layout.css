@@ -1847,11 +1847,15 @@ timer-display {
 }
 
 .time-result-wrapper {
-    font-size: 8em;
-    padding: 0.5em;
+    margin: 1em;
+}
+
+.large {
+    font-size: 3em;
     line-height: 1em;
 }
 
-#fail .time-result-wrapper .smaller {
-    font-size: 50%;
+.medium {
+    font-size: 1.5em;
+    line-height: 1em;
 }
