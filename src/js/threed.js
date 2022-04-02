@@ -13,6 +13,44 @@ console.log({
 
 const ANIMATION_SCALE = 0.1;
 
+class TimerDisplay extends HTMLElement {
+  connectedCallback() {
+    this.setDisplayTime(0);
+  }
+
+  reset() {
+    this.setDisplayTime(0);
+  }
+
+  startingTimestamp = 0;
+  active = false;
+  start() {
+    if (!this.active) {
+      this.startingTimestamp = performance.now();
+      this.active = true;
+    }
+  }
+
+  stop() {
+    this.active = false;
+    this.update();
+    for (const timeResult of document.querySelector(".time-result")) {
+      timeResult.textContent = this.textContent;
+    }
+  }
+
+  update() {
+    if (this.active) {
+      this.setDisplayTime(performance.now() - this.startingTimestamp);
+    }
+  }
+
+  setDisplayTime(ms) {
+    this.textContent = globalThis.formatTime(ms);
+  }
+}
+customElements.define("timer-display", TimerDisplay);
+
 // const debugNoRotation =
 //   new URL(location.href).searchParams.get("debug-rotation") === "none";
 // const debugRotationScale = debugNoRotation ? 0 : 1;
@@ -517,6 +555,7 @@ function initButtons() {
             toggle_rotation: 57,
             ...NEW_KEY_ALIASES,
           };
+        let startTimer = true;
         switch (e) {
           case o.rotate_left:
           case o.rotate_left2:
@@ -573,6 +612,12 @@ function initButtons() {
             toggleRotation();
             break;
           case o.toggle_earth:
+            break;
+          default:
+            startTimer = false;
+        }
+        if (startTimer) {
+          $("timer-display").start();
         }
         (flightInput = t.keyCode + flightInput),
           "50495353" === flightInput.substring(0, 8) &&
@@ -783,6 +828,7 @@ function hideIntro() {
     introAnimationOut.play(0));
 }
 function showInterface() {
+  $("timer-display").reset();
   (interfaceAnimationIn = new TimelineMax({
     paused: !0,
     onComplete: function () {
@@ -1058,6 +1104,7 @@ function hideInterface(t) {
     ),
     "success" === t &&
       (playSound("door"),
+      $("timer-display").stop(),
       interfaceAnimationOut.fromTo(
         "#success",
         1,
@@ -1131,6 +1178,7 @@ function resetMovement() {
     resetPrecision();
 }
 function resetPosition() {
+  $("timer-display").reset();
   resetMovement(),
     gsap.to(motionVector, ANIMATION_SCALE * 5, {
       x: 0,
@@ -2324,6 +2372,7 @@ function animate() {
   requestAnimationFrame(animate), render();
 }
 function render() {
+  $("timer-display").update();
   if ((scene.updateMatrixWorld(), isWarpComplete)) {
     (currentRotationX = currentRotationX +=
       (0.01 * -targetRotationX - currentRotationX) * moveSpeed),
