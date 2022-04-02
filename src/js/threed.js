@@ -1,3 +1,20 @@
+const debugNoRotation =
+  new URL(location.href).searchParams.get("debug-rotation") === "none";
+const debugRotationScale = debugNoRotation ? 0 : 1;
+
+const debugNoYZ =
+  new URL(location.href).searchParams.get("debug-yz") === "none";
+const debugYZScale = debugNoYZ ? 0 : 1;
+
+console.log({
+  debugNoRotation,
+  debugNoYZ,
+});
+
+// const debugNoRotation =
+//   new URL(location.href).searchParams.get("debug-rotation") === "none";
+// const debugRotationScale = debugNoRotation ? 0 : 1;
+
 function playSound(cl) {
   const elems = document.querySelectorAll(`audio.${cl}`);
   const playable = [];
@@ -742,13 +759,18 @@ function showInterface() {
     interfaceAnimationIn.to(
       camera.position,
       5,
-      { x: 12, y: 30, ease: "expo.inOut" },
+      { x: debugYZScale * 12, y: debugYZScale * 30, ease: "expo.inOut" },
       2
     ),
     interfaceAnimationIn.to(
       camera.rotation,
       5,
-      { x: -20 * toRAD, y: -10 * toRAD, z: 15 * toRAD, ease: "expo.inOut" },
+      {
+        x: debugRotationScale * -20 * toRAD,
+        y: debugRotationScale * -10 * toRAD,
+        z: debugRotationScale * 15 * toRAD,
+        ease: "expo.inOut",
+      },
       2
     ),
     interfaceAnimationIn.fromTo(
@@ -1066,9 +1088,9 @@ function resetPosition() {
     gsap.to(translationVector, 5, { x: 0, y: 0, z: 0, ease: "expo.out" }),
     gsap.to(camera.position, 5, { x: 12, y: 30, z: 50, ease: "expo.out" }),
     gsap.to(camera.rotation, 5, {
-      x: -20 * toRAD,
-      y: -10 * toRAD,
-      z: 15 * toRAD,
+      x: debugRotationScale * -20 * toRAD,
+      y: debugRotationScale * -10 * toRAD,
+      z: debugRotationScale * 15 * toRAD,
       ease: "expo.out",
     });
 }
