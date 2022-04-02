@@ -11,6 +11,8 @@ console.log({
   debugNoYZ,
 });
 
+const ANIMATION_SCALE = 0.1;
+
 // const debugNoRotation =
 //   new URL(location.href).searchParams.get("debug-rotation") === "none";
 // const debugRotationScale = debugNoRotation ? 0 : 1;
@@ -276,22 +278,27 @@ function startPreloader() {
   var t = new TimelineMax({ paused: !0 });
   t.fromTo(
     "#interactive",
-    3,
+    ANIMATION_SCALE * 3,
     { autoAlpha: 0 },
     { autoAlpha: 1, ease: "none" },
     0
   ),
     t.fromTo(
       "#preloader-circle .circle-grey",
-      3,
+      ANIMATION_SCALE * 3,
       { drawSVG: "0% 0%" },
       { drawSVG: "0% 102%", ease: "expo.inOut" },
       0
     ),
-    t.to("#preloader-circle .circle-color", 1, { autoAlpha: 1 }, 0),
+    t.to(
+      "#preloader-circle .circle-color",
+      ANIMATION_SCALE * 1,
+      { autoAlpha: 1 },
+      0
+    ),
     t.fromTo(
       "#preloader-inner, #preloader-circle .circle-grey",
-      1,
+      ANIMATION_SCALE * 1,
       { autoAlpha: 0 },
       { autoAlpha: 1, ease: "none" },
       0
@@ -328,7 +335,7 @@ function updatePreloader(t) {
   var e = 100 + texturesTotal,
     o = t + texturesLoaded,
     a = Math.round(100 * (o / e));
-  gsap.to("#preloader-circle .circle-color", 0.25, {
+  gsap.to("#preloader-circle .circle-color", ANIMATION_SCALE * 0.25, {
     drawSVG: "0% " + a + "%",
     immediateRender: !1,
     ease: "expo.out",
@@ -339,11 +346,16 @@ function hidePreloader() {
   var t = new TimelineMax({ paused: !0, onComplete: function () {} });
   t.to(
     "#preloader-circle .circle-color",
-    2,
+    ANIMATION_SCALE * 2,
     { drawSVG: "100% 100%", ease: "expo.inOut", immediateRender: !1 },
     0
   ),
-    t.to("#preloader", 1, { autoAlpha: 0, ease: "none" }, 1),
+    t.to(
+      "#preloader",
+      ANIMATION_SCALE * 1,
+      { autoAlpha: 0, ease: "none" },
+      ANIMATION_SCALE * 1
+    ),
     t.play(0);
 }
 function initExperience() {
@@ -548,20 +560,25 @@ function initButtons() {
         }
         (flightInput = t.keyCode + flightInput),
           "50495353" === flightInput.substring(0, 8) &&
-            (gsap.to(motionVector, 5, { x: 0, y: 0, z: 0, ease: "circ.out" }),
-            gsap.to(translationVector, 5, {
+            (gsap.to(motionVector, ANIMATION_SCALE * 5, {
               x: 0,
               y: 0,
               z: 0,
               ease: "circ.out",
             }),
-            gsap.to(camera.position, 5, {
+            gsap.to(translationVector, ANIMATION_SCALE * 5, {
+              x: 0,
+              y: 0,
+              z: 0,
+              ease: "circ.out",
+            }),
+            gsap.to(camera.position, ANIMATION_SCALE * 5, {
               x: 0,
               y: 0,
               z: -149.5,
               ease: "circ.out",
             }),
-            gsap.to(camera.rotation, 5, {
+            gsap.to(camera.rotation, ANIMATION_SCALE * 5, {
               x: 0 * toRAD,
               y: 0 * toRAD,
               z: 0 * toRAD,
@@ -667,45 +684,50 @@ var introAnimationIn,
   interfaceAnimationOut,
   isIntroStarted = !1;
 function showIntro() {
-  setTimeout(() => playSound("intro"), 3700);
+  setTimeout(() => {
+    playSound("intro");
+  }, ANIMATION_SCALE * 3700);
+  setTimeout(() => {
+    $("#begin-button").focus();
+  }, ANIMATION_SCALE * 5000);
   (introAnimationIn = new TimelineMax({ paused: !0 })),
     introAnimationIn.fromTo(
       "#intro",
-      1,
+      ANIMATION_SCALE * 1,
       { autoAlpha: 0 },
       { autoAlpha: 1, display: "block", ease: "none" },
       0
     ),
     introAnimationIn.staggerFromTo(
       "#logoSVG .stroke_white",
-      1,
+      ANIMATION_SCALE * 1,
       { stroke: "#000000" },
       { stroke: "#FFFFFF", ease: "none" },
-      0.1,
-      1
+      ANIMATION_SCALE * 0.1,
+      ANIMATION_SCALE * 1
     ),
     introAnimationIn.staggerFromTo(
       "#logoSVG .stroke_white",
-      2,
+      ANIMATION_SCALE * 2,
       { drawSVG: "50% 50%" },
       { drawSVG: "0% 100%", ease: "circ.inOut" },
-      0.25,
-      1
+      ANIMATION_SCALE * 0.25,
+      ANIMATION_SCALE * 1
     ),
     introAnimationIn.fromTo(
       "#logoSVG .fill",
-      2,
+      ANIMATION_SCALE * 2,
       { autoAlpha: 0 },
       { autoAlpha: 1, ease: "none" },
-      4
+      ANIMATION_SCALE * 4
     ),
     introAnimationIn.staggerFromTo(
       "#intro-step1 .animate",
-      2,
+      ANIMATION_SCALE * 2,
       { y: 50, autoAlpha: 0 },
       { y: 0, autoAlpha: 1, ease: "expo.out" },
-      0.25,
-      4
+      ANIMATION_SCALE * 0.25,
+      ANIMATION_SCALE * 4
     ),
     introAnimationIn.play(0);
 }
@@ -758,13 +780,13 @@ function showInterface() {
     ),
     interfaceAnimationIn.to(
       camera.position,
-      5,
+      ANIMATION_SCALE * 5,
       { x: debugYZScale * 12, y: debugYZScale * 30, ease: "expo.inOut" },
       2
     ),
     interfaceAnimationIn.to(
       camera.rotation,
-      5,
+      ANIMATION_SCALE * 5,
       {
         x: debugRotationScale * -20 * toRAD,
         y: debugRotationScale * -10 * toRAD,
@@ -986,25 +1008,25 @@ function hideInterface(t) {
     ),
     interfaceAnimationOut.to(
       camera.position,
-      5,
+      ANIMATION_SCALE * 5,
       { x: 0, y: 0, z: 50, ease: "expo.inOut" },
       0
     ),
     interfaceAnimationOut.to(
       camera.rotation,
-      5,
+      ANIMATION_SCALE * 5,
       { x: 0, y: 0, z: 0, ease: "expo.inOut" },
       0
     ),
     interfaceAnimationOut.to(
       motionVector,
-      5,
+      ANIMATION_SCALE * 5,
       { x: 0, y: 0, z: 0, ease: "expo.inOut" },
       0
     ),
     interfaceAnimationOut.to(
       translationVector,
-      5,
+      ANIMATION_SCALE * 5,
       { x: 0, y: 0, z: 0, ease: "expo.inOut" },
       0
     ),
@@ -1084,10 +1106,25 @@ function resetMovement() {
 }
 function resetPosition() {
   resetMovement(),
-    gsap.to(motionVector, 5, { x: 0, y: 0, z: 0, ease: "expo.out" }),
-    gsap.to(translationVector, 5, { x: 0, y: 0, z: 0, ease: "expo.out" }),
-    gsap.to(camera.position, 5, { x: 12, y: 30, z: 50, ease: "expo.out" }),
-    gsap.to(camera.rotation, 5, {
+    gsap.to(motionVector, ANIMATION_SCALE * 5, {
+      x: 0,
+      y: 0,
+      z: 0,
+      ease: "expo.out",
+    }),
+    gsap.to(translationVector, ANIMATION_SCALE * 5, {
+      x: 0,
+      y: 0,
+      z: 0,
+      ease: "expo.out",
+    }),
+    gsap.to(camera.position, ANIMATION_SCALE * 5, {
+      x: 12,
+      y: 30,
+      z: 50,
+      ease: "expo.out",
+    }),
+    gsap.to(camera.rotation, ANIMATION_SCALE * 5, {
       x: debugRotationScale * -20 * toRAD,
       y: debugRotationScale * -10 * toRAD,
       z: debugRotationScale * 15 * toRAD,
@@ -2136,7 +2173,7 @@ function createIss() {
         var n = new THREE.CSS2DObject(i);
         n.position.set(0, 0, 0),
           issObject.add(n),
-          gsap.to("#preloader-circle .circle-color", 0.25, {
+          gsap.to("#preloader-circle .circle-color", ANIMATION_SCALE * 0.25, {
             drawSVG: "0% 100%",
             ease: "expo.out",
             onComplete: function () {
