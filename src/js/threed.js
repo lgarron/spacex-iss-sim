@@ -743,6 +743,7 @@ function showIntroHelpers() {
 }
 function hideIntro() {
   playSound("begin");
+  playSound("begin2");
   holosteadyLoop?.play();
   isIntroStarted ||
     ((isIntroStarted = !0),
