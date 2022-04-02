@@ -17,6 +17,15 @@ const ANIMATION_SCALE = 0.1;
 //   new URL(location.href).searchParams.get("debug-rotation") === "none";
 // const debugRotationScale = debugNoRotation ? 0 : 1;
 
+const NEW_KEY_ALIASES = {
+  roll_left3: 85,
+  roll_right3: 79,
+  rotate_right3: 76,
+  rotate_up3: 73,
+  rotate_left3: 74,
+  rotate_down3: 75,
+};
+
 function playSound(cl) {
   const elems = document.querySelectorAll(`audio.${cl}`);
   const playable = [];
@@ -505,31 +514,38 @@ function initButtons() {
             rotate_down2: 40,
             toggle_earth: 48,
             toggle_translation: 50,
-            toggle_rotation: 51,
+            toggle_rotation: 57,
+            ...NEW_KEY_ALIASES,
           };
         switch (e) {
           case o.rotate_left:
           case o.rotate_left2:
+          case o.rotate_left3:
             $("#yaw-left-button").classList.add("active");
             break;
           case o.rotate_right:
           case o.rotate_right2:
+          case o.rotate_right3:
             $("#yaw-right-button").classList.add("active");
             break;
           case o.rotate_up:
           case o.rotate_up2:
+          case o.rotate_up3:
             $("#pitch-up-button").classList.add("active");
             break;
           case o.rotate_down:
           case o.rotate_down2:
+          case o.rotate_down3:
             $("#pitch-down-button").classList.add("active");
             break;
           case o.roll_left:
           case o.roll_left2:
+          case o.roll_left3:
             $("#roll-left-button").classList.add("active");
             break;
           case o.roll_right:
           case o.roll_right2:
+          case o.roll_right3:
             $("#roll-right-button").classList.add("active");
             break;
           case o.move_up:
@@ -611,18 +627,21 @@ function initButtons() {
             rotate_up2: 38,
             rotate_left2: 37,
             rotate_down2: 40,
+            ...NEW_KEY_ALIASES,
           };
-        e === o.rotate_left || e === o.rotate_left2
+        e === o.rotate_left || e === o.rotate_left2 || e === o.rotate_left3
           ? (yawLeft(), $("#yaw-left-button").classList.remove("active"))
-          : e === o.rotate_right || e === o.rotate_right2
+          : e === o.rotate_right ||
+            e === o.rotate_right2 ||
+            e === o.rotate_right3
           ? (yawRight(), $("#yaw-right-button").classList.remove("active"))
-          : e === o.rotate_up || e === o.rotate_up2
+          : e === o.rotate_up || e === o.rotate_up2 || e === o.rotate_up3
           ? (pitchUp(), $("#pitch-up-button").classList.remove("active"))
-          : e === o.rotate_down || e === o.rotate_down2
+          : e === o.rotate_down || e === o.rotate_down2 || e === o.rotate_down3
           ? (pitchDown(), $("#pitch-down-button").classList.remove("active"))
-          : e === o.roll_left || e === o.roll_left2
+          : e === o.roll_left || e === o.roll_left2 || e === o.roll_left3
           ? (rollLeft(), $("#roll-left-button").classList.remove("active"))
-          : e === o.roll_right || e === o.roll_right2
+          : e === o.roll_right || e === o.roll_right2 || e === o.roll_right3
           ? (rollRight(), $("#roll-right-button").classList.remove("active"))
           : e === o.move_up
           ? (translateUp(),
