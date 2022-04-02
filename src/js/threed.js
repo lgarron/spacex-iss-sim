@@ -15,7 +15,9 @@ function playSound(cl) {
   choice.play();
 }
 
+let holosteadyLoop;
 loopify("./audio/sfx_holosteady_loop1.wav", (err, loop) => {
+  holosteadyLoop = loop;
   loop.play();
 });
 
@@ -82,12 +84,12 @@ class Klaxon {
 }
 const klaxon = new Klaxon(
   null, //"./audio/sfx_buzzer_misc_t_loop.wav",
-  "./audio/sfx_klaxon2_loop.wav",
+  "./audio/sfx_klaxon2_loop_quieter.wav",
   "./audio/sfx_klaxon3_loop.wav"
 );
 const speedklaxon = new Klaxon(
   null, //"./audio/sfx_buzzer_misc_t_loop.wav",
-  null,
+  "./audio/sfx_passby_bigship_loop2_quieter.mp3",
   "./audio/sfx_passby_bigship_loop2.wav"
 );
 
