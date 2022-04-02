@@ -675,12 +675,18 @@ function updateToggleStatus() {
 }
 function updatePrecision(t) {
   "rotation" === t &&
-    ((rotationPulseSize = 0.5 === rotationPulseSize ? 1 : 0.5),
+    ((rotationPulseSize =
+      0.5 === rotationPulseSize
+        ? (playSound("toggle-on"), 1)
+        : (playSound("toggle-off"), 0.5)),
     $("#rotation-controls").classList.toggle("large"),
     $("#precision-rotation-status").classList.toggle("large"),
     $("#hud-tips").classList.toggle("rotation-large")),
     "translation" === t &&
-      ((translationPulseSize = 0.001 === translationPulseSize ? 0.005 : 0.001),
+      ((translationPulseSize =
+        0.001 === translationPulseSize
+          ? (playSound("toggle-on"), 0.005)
+          : (playSound("toggle-off"), 0.001)),
       $("#translation-controls").classList.toggle("large"),
       $("#precision-translation-status").classList.toggle("large"),
       $("#hud-tips").classList.toggle("translation-large"));
