@@ -6,5 +6,5 @@ Run the [SpaceX ISS Docking Simulator](https://iss-sim.spacex.com/) locally.
 
 ```shell
 make dev # uses Caddy
-# Open localhost:8000
+# Open localhost:1998
 ```
