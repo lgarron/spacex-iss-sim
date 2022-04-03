@@ -4,6 +4,7 @@ Run the [SpaceX ISS Docking Simulator](https://iss-sim.spacex.com/) locally.
 
 Modifications:
 
+- HiDPI (e.g. Retina) resolution
 - Timer
 - Key aliases:
   - IK/JL/UP keys for rotations
