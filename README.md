@@ -9,7 +9,7 @@ Modifications:
 - Key aliases:
   - IK/JL/UP keys for rotations
   - `2`/`9` keys for toggles
-  - `[`/`]` as aliases for backward/forward
+  - `[`/`]` keys for backward/forward
 - Very fake sound effects
 
 ## Run
