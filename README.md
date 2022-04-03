@@ -5,7 +5,10 @@ Run the [SpaceX ISS Docking Simulator](https://iss-sim.spacex.com/) locally.
 Modifications:
 
 - Timer
-- IK/JL/UP keys for rotations (and `2`/`9` keys for toggles)
+- Key aliases:
+  - IK/JL/UP keys for rotations
+  - `2`/`9` keys for toggles
+  - `[`/`]` as aliases for backward/forward
 - Very fake sound effects
 
 ## Run

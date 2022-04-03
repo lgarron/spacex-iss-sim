@@ -72,6 +72,8 @@ const NEW_KEY_ALIASES = {
   rotate_up3: 73,
   rotate_left3: 74,
   rotate_down3: 75,
+  forward2: 221,
+  backward2: 219,
 };
 
 function playSound(cl) {
@@ -609,9 +611,11 @@ function initButtons() {
             $("#translate-right-button").classList.add("active");
             break;
           case o.forward:
+          case o.forward2:
             $("#translate-forward-button").classList.add("active");
             break;
           case o.backward:
+          case o.backward2:
             $("#translate-backward-button").classList.add("active");
             break;
           case o.toggle_translation:
@@ -706,10 +710,10 @@ function initButtons() {
           : e === o.move_right
           ? (translateRight(),
             $("#translate-right-button").classList.remove("active"))
-          : e === o.forward
+          : e === o.forward || e === o.forward2
           ? (translateForward(),
             $("#translate-forward-button").classList.remove("active"))
-          : e === o.backward
+          : e === o.backward || e === o.backward2
           ? (translateBackward(),
             $("timer-display").start(),
             playSound("thruster-low"),
