@@ -1,0 +1,8 @@
+
+{
+  "@cubing/deploy": {
+    "https://garron.net/app/iss-sim/": {
+      "fromLocalDir": "."
+    }
+  }
+}
